@@ -1,0 +1,331 @@
+<style>
+
+    #homeScreen {
+        width: 100%;
+        height: 100%;
+        padding: 1px;
+        margin: 0 auto 30px;
+        /*background: url('../img/background.jpg') no-repeat left bottom;*/
+    }
+
+        /* The mask shows only one screen at the time. Uses oveflow:hidden */
+
+    #mask {
+        width: 332px;
+        height: 380px;
+        position: relative;
+        overflow: hidden;
+        margin: 0px auto 0;
+    }
+
+    #allScreens {
+        height: 100%;
+        top: 0;
+        left: 0;
+        position: absolute;
+        cursor: move;
+    }
+
+    .screen {
+        width: 270px;
+        float: left;
+    }
+
+    #dock .dockicon,
+    .screen .icon {
+        float: left;
+        width: 60px;
+        height: 60px;
+        background-repeat: no-repeat;
+        margin: 12px;
+        position: relative;
+    }
+
+        /* Displaying the title attribute below the icon: */
+
+    .screen .icon:after {
+        bottom: -25px;
+        color: white;
+        content: attr(title);
+        font-size: 12px;
+        height: 20px;
+        left: -20px;
+        overflow: hidden;
+        position: absolute;
+        text-align: center;
+        white-space: nowrap;
+        width: 100px;
+        text-shadow: 0 0 3px #222;
+    }
+
+        /* The dock icons get subtle shadows below them */
+
+    #dock .dockicon:after {
+        border-radius: 50px/10px;
+        bottom: 7px;
+        box-shadow: 0 5px 2px #000000;
+        content: "";
+        height: 1px;
+        position: absolute;
+        width: 58px;
+
+    }
+
+    #indicators {
+        text-align: center;
+        list-style: none;
+    }
+
+    #indicators li {
+        border-radius: 50%;
+        display: inline-block;
+        margin: 7px;
+        width: 6px;
+        height: 6px;
+        background-color: white;
+        opacity: 0.6;
+    }
+
+    #indicators li.active {
+        opacity: 1;
+        background-color: #00A2D6;
+        box-shadow: 0 0 3px #00A2D6, 0 0 1px #51CFF9 inset;
+    }
+    #dock {
+        position:fixed;
+        bottom:10px;
+        left:0px;
+        right:0px;
+        background-image:url('img/dock.png');
+        background-size:100% 100%;
+        width:100%;
+        padding-left:10%;
+        z-index:20000;
+    }
+
+    .dockicon {
+        width:40px !important;
+        height:40px !important;
+        margin-top:-10px !important;
+        z-index:20000;
+    }
+    .dockicon:after {
+        content:attr(title) !important;
+        font-size:10px !important;
+        width:40px !important;
+        text-align:center;
+        color:white;
+    }
+    .navbar  {
+        margin-bottom:0px !important;
+    }
+    .left {
+        width: 0px;
+        height: 0px;
+        border-style: solid;
+        border-width: 0 0px 60px 18px;
+        border-color: transparent transparent #6c7068 transparent;
+    }
+    .right {
+        width: 0px;
+        height: 0px;
+        border-style: solid;
+        border-width: 60px 0 0px 18px;
+        border-color: transparent transparent transparent #6c7068;
+    }
+    .center {
+        width:100px;
+        height:18px;
+        background-color:#6c7068;
+    }
+    #branding {
+        position:fixed;
+        bottom:73px;
+        width:80%;
+        left:30px;
+        right:30px;
+        background-size:100% 100%;
+
+    }
+
+#branding {
+    position: fixed;
+    bottom: 19px!important;
+    left: 0px !important;
+    right: 0px;
+    width: 100% !important;
+    height:63px;
+    display:none !important;
+}
+body {
+    position: absolute;
+    width: 100 % ;
+    height: 100 % ;
+    background - size: 100 % 100 % !important;
+}
+    .icon {
+        width: 68px!important;
+        height: 68px!important;
+}
+    .campuseai - Info {
+        color: white;
+}
+    .dockicon: after {
+        bottom: 0px!important;
+}
+
+.dockicon {
+    margin - bottom: 25px!important;
+}
+
+.blockUI i {
+    color: white!important;
+}
+
+.app {
+
+background: rgb(14,14,14) !important; /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(14,14,14,1) 0%, rgba(125,126,125,1) 100%) !important; /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(14,14,14,1)), color-stop(100%,rgba(125,126,125,1))) !important; /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(14,14,14,1) 0%,rgba(125,126,125,1) 100%) !important; /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(14,14,14,1) 0%,rgba(125,126,125,1) 100%) !important; /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(14,14,14,1) 0%,rgba(125,126,125,1) 100%) !important; /* IE10+ */
+background: linear-gradient(to bottom,  rgba(14,14,14,1) 0%,rgba(125,126,125,1) 100%) !important; /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0e0e0e', endColorstr='#7d7e7d',GradientType=0 ) !important; /* IE6-9 */
+}
+#dock {
+	display:none !important;
+}
+.sidebar-toggle {
+	display:none !important;
+}
+
+/*.btn-navbar {
+  display:none !important;
+}*/
+.navbar-brand {
+ background: url("./images/navigationbg.jpg") repeat-x scroll 0 0 #000;
+}
+.app-body {
+	padding-bottom:19px !important;
+}
+.app-content{
+	background:#000;
+
+	background:
+	radial-gradient(black 15%, transparent 16%) 0 0,
+	radial-gradient(black 15%, transparent 16%) 8px 8px,
+	radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
+	radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
+	background-color:#282828;
+background-size:16px 16px;
+
+/*background-image: linear-gradient(top, #020302 0%, #06162b 30%, #0b2a55 45%, #06162b 65%, #020302 100%);
+background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #020302), color-stop(0.3023333, #06162b), color-stop(0.45324364471724005, #0b2a55), color-stop(0.6496666, #06162b), color-stop(0.9999998999999999, #020302));
+background-image: -moz-linear-gradient(top, #020302 0%, #06162b 30%, #0b2a55 45%, #06162b 65%, #020302 100%);
+background-image: -o-linear-gradient(top, #020302 0%, #06162b 30%, #0b2a55 45%, #06162b 65%, #020302 100%);
+background-image: -ms-linear-gradient(top, #020302 0%, #06162b 30%, #0b2a55 45%, #06162b 65%, #020302 100%);
+*/
+}
+.btn {
+	background-color: #e30074;
+    border-color: #a40154;
+    color: #ffffff;
+}
+
+.logincontainer {
+	background: none repeat scroll 0 0 transparent;
+    border: 2px solid;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #fff;
+    margin: 10px;
+    padding: 10px;
+}
+</style>
+<div content-for="navbarAction" >
+	<div ng-click='klogout();' class="btn btn-navbar" ng-show="klogin">
+  		<i class="fa fa-power-off fa-2x"></i>
+    </div>
+</div>
+
+<div class="scrollable">
+    <div class="scrollable-content">
+        <div id="appContent1">
+
+			<div class="panel panel-primary" style="border:none;border-radius:5px;" ng-show="klogin">
+				<div class="panel-heading" style="background:#0e0e0e;">
+					<!--<div class="list-group-item">-->
+						<input ng-model="searchtenant" class="form-control" placeholder="Search"/>
+        			<!--</div>-->
+				</div>
+				<div class="panel-body" style="1background:#000;">
+					<!--<a class="list-group-item clearfix" href="#/launch/{{tenant.tenantid}}" >
+						<span style="color:#000;font-weight:bold;font-size:1.2em;">Inst 1<i class="fa fa-chevron-right pull-right"></i></span>
+					</a>
+					<a class="list-group-item clearfix" href="#/launch/{{tenant.tenantid}}" >
+						<span style="color:#000;font-weight:bold;">Institution 2</span>
+					</a>
+					<a class="list-group-item clearfix" href="#/launch/{{tenant.tenantid}}" >
+						<span style="color:#000;font-weight:bold;">Institution 1</span>
+					</a>
+					<a class="list-group-item clearfix" href="#/launch/{{tenant.tenantid}}" >
+						<span style="color:#000;font-weight:bold;">Institution 2</span>
+					</a>
+					<a class="list-group-item clearfix" href="#/launch/{{tenant.tenantid}}" >
+						<span style="color:#fff;font-weight:bold;">Institution 1</span>
+					</a>
+					<a class="list-group-item clearfix" href="#/launch/{{tenant.tenantid}}" >
+						<span style="color:#fff;font-weight:bold;font-size:14px;">Institution 2</span>
+					</a>
+					<a class="list-group-item clearfix" href="#/launch/{{tenant.tenantid}}" >
+						<span style="color:#fff;font-weight:bold;">Institution 1</span>
+					</a>
+					<a class="list-group-item clearfix" href="#/launch/{{tenant.tenantid}}" >
+						<span style="color:#fff;font-weight:bold;">Institution 2</span>
+					</a>-->
+
+					<a class="list-group-item clearfix" style="paddiing:10px;" ng-repeat="tenant in tenants | filter:searchtenant" href="#/launch/{{tenant.tenantid}}?appid={{tenant.appid}}">
+						<span style="color:#000;font-weight:bold;font-size:1.2em;">{{tenant.tenantname}}<i class="fa fa-chevron-right pull-right"></i></span>
+					</a>
+				</div>
+			</div>
+        	<ul class="list-group hide" ng-show="klogin">
+        		<div class="list-group-item">
+        			<input ng-model="searchtenant" class="form-control" placeholder="Search"/>
+        		</div>
+        		<!--<div class="list-group-item clearfix">
+				     <button class="btn btn-danger pull-right" ng-click="klogout();">Logout</button>
+        		</div>-->
+				<a class="list-group-item clearfix" ng-repeat="tenant in tenants | filter:searchtenant" href="#/launch/{{tenant.tenantid}}">
+					<h4 style="color:#000;">{{tenant.tenantname}}<span class="fa fa-chevron-circle-right pull-right fa-2x"></span></h4>
+					<!--<p>{{tenant.appname}}</p>-->
+					<!--<img src="https://kryptos.kryptosmobile.com/metaData/branding/{{tenant.tenantid}}" />-->
+				</a>
+			</ul>
+
+			 <div class="logincontainer" style="padding:10px;" ng-show="!klogin">
+				 <img src="./img/kryptos.png" style="text-align: center; margin: auto; width: 100%;">
+  				<div style="padding:10px;color:#fff;text-align:center;">Login using your Kryptos credentials.</div>
+			        <form role="form">
+			            <div class="form-group">
+			                <div class="input-group">
+			                    <span class="input-group-addon"><span class="fa fa-user"></span></span>
+			                    <input name="loginUsername" id="loginUsername" type="text" class="form-control" placeholder="Username">
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <div class="input-group">
+			                    <span class="input-group-addon"><span class="fa fa-lock"></span></span>
+			                    <input name="loginPassword" id="loginPassword" type="password" class="form-control" placeholder="Password">
+			                </div>
+			            </div>
+			            <button type="button" class="btn btn-primary btn-lg btn-block" ng-click="login();">Login</button>
+			        </form>
+    		</div>
+    		<div class="logincontainer">
+    			<span style="">Do not have an account?</span>
+    			<button type="button" class="btn btn-success btn-mini btn-block">Sign Up</button>
+    		</div>
+        </div>
+    </div>
+</div>

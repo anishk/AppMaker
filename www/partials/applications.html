@@ -1,0 +1,66 @@
+<style>
+#mainSidebar {
+	display:none !important;
+}
+#branding {
+	display:none !important;
+}
+.sidebar-toggle {
+	display:none !important;
+}
+
+.navbar-brand {
+ background: url("./images/navigationbg.jpg") repeat-x scroll 0 0 #000;
+}
+.app-body {
+	padding-bottom:19px !important;
+}
+.app-content {
+	background:#000;
+}
+.btn {
+	background-color: #e30074;
+    border-color: #a40154;
+    color: #ffffff;
+}
+</style>
+<div class="scrollable">
+    <div class="scrollable-content">
+        <div id="appContent1">
+			<div class="panel panel-primary" style="border:none;border-radius:5px;">
+				<div class="panel-heading" style="background:#0e0e0e;">
+					<!--<div class="list-group-item">-->
+						<input ng-model="searchtenant" class="form-control" placeholder="Search"/>
+        			<!--</div>-->
+				</div>
+				<div class="panel-body" style="1background:#000;">
+					<div ng-repeat="appfeature in appFeatures">
+						<a class="active list-group-item clearfix" style="paddiing:10px;">
+							<span style="color:#000;font-weight:bold;font-size:1.2em;">{{appfeature.displayname}}</span>
+						</a>
+						<div class="list-group-item">
+							Roles:<span class="pull-right">{{appfeature.roles}}</span>
+						</div>
+						<div class="list-group-item">
+							Enabled:<span class="pull-right fa fa-check-square-o" ng-show="appfeature.enabled"></span>
+							<span class="pull-right fa fa-times" ng-show="!appfeature.enabled"></span>
+						</div>
+						<div class="list-group-item">
+							Docked:<span class="pull-right fa fa-check-square-o" ng-show="appfeature.showInDock"></span>
+							<span class="pull-right fa fa-times" ng-show="!appfeature.showInDock"></span>
+						</div>
+						<div class="list-group-item">
+							Show in Home:<span class="pull-right fa fa-check-square-o" ng-show="appfeature.showInHome"></span>
+							<span class="pull-right fa fa-times" ng-show="!appfeature.showInHome"></span>
+						</div>
+						<div class="list-group-item">
+							Network Required:<span class="pull-right fa fa-check-square-o" ng-show="appfeature.networkrequired"></span>
+							<span class="pull-right fa fa-times" ng-show="!appfeature.networkrequired"></span>
+						</div>
+
+					</div>
+				</div>
+			</div>
+        </div>
+    </div>
+</div>
