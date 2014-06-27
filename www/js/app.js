@@ -307,9 +307,11 @@ var MyCampusApp = {
 //
 //        var rootScope = angular.element('#htmlRoot').scope();
 //        rootScope.updateCheck();
-			MyCampusApp.rootScope.updateCheck();
+			if(MyCampusApp.rootScope) {
+				MyCampusApp.rootScope.updateCheck();
+			}
         }catch(e) {
-            alert("Exception in Resume handler : " + e);
+            //alert("Exception in Resume handler : " + e);
         }
     },
 
