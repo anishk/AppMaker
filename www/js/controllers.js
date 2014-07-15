@@ -755,7 +755,7 @@ angular.module('myApp.controllers', []).
 			$rootScope.backgroundUrl = "./images/block.png";
 			$rootScope.brandingUrl = "./images/Banner-03.png";
 
-			$rootScope.appDisplayName = "App Maker";
+			$rootScope.appDisplayName = "KRYPTOS App Machine";
 			var url = "https://kryptos.kryptosmobile.com";
 			$scope.loadApps = function(token) {
 				var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading App..!!</h3></div>';
@@ -768,7 +768,6 @@ angular.module('myApp.controllers', []).
 						$.unblockUI();
 					}).error (function(edata, status) {
 						$.unblockUI();
-						alert ("Error in listMyApps : " + edata + " Status : " + status);
 						if(status == 403) {
                         	var username = $.jStorage.get('kusername');
                         	var password = $.jStorage.get('kpassword');
