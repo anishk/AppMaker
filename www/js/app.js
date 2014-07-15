@@ -80,7 +80,7 @@ var MyCampusApp = {
         if(app.appFeatureType == 'Public') {
             retval = true;
         }else {
-            if(app.roles.trim().length == 0) {
+            if(app.roles == null || app.roles.trim().length == 0) {
                 retval = true;
             }else {
                 var roles = app.roles.split(",");

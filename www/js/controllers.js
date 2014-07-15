@@ -766,9 +766,28 @@ angular.module('myApp.controllers', []).
 						//alert ("List Apps data : " + d1);
 						$rootScope.tenants = d1;
 						$.unblockUI();
-					}).error (function(edata) {
+					}).error (function(edata, status) {
 						$.unblockUI();
-						alert ("Error in listMyApps : " + edata);
+						alert ("Error in listMyApps : " + edata + " Status : " + status);
+						if(status == 403) {
+                        	var username = $.jStorage.get('kusername');
+                        	var password = $.jStorage.get('kpassword');
+
+							$http.post(url + "/api/authenticate" , {username : username, password : password}).
+								success(function(data) {
+									$rootScope.klogin = true;
+									$.jStorage.set('kusername', username);
+									$.jStorage.set('kpassword', password);
+									$.jStorage.set('ktoken', data.token);
+									$.unblockUI();
+									//alert ("Login success : " + data.token);
+									$scope.loadApps(data.token);
+								}).error(function(data){
+									$.unblockUI();
+									alert ("Error in authenticate : " + data);
+								}
+							);
+						}
 				});
 			}
 
