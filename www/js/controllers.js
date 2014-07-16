@@ -527,7 +527,7 @@ angular.module('myApp.controllers', []).
 				$.jStorage.deleteKey('kpassword');
 				$.jStorage.deleteKey('ktoken');
 				$rootScope.$apply(function () {
-						$location.path("/amakerhome");
+						$location.path("/junk");
 				});
 			};
 			var tenant = $routeParams.tenant;

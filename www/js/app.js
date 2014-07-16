@@ -16,7 +16,8 @@ angular.module('myApp', [
         $routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl1'});
         $routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});
         $routeProvider.when('/home', {templateUrl: 'partials/home.html', controller: 'HomeCtrl'});
-        $routeProvider.when('/amakerhome', {templateUrl: 'partials/amakerhome.html', controller: 'AMakerHomeCtrl'});        $routeProvider.when('/settings', {templateUrl: 'partials/settings.html', controller: 'SettingsCtrl'});
+        $routeProvider.when('/amakerhome', {templateUrl: 'partials/amakerhome.html', controller: 'AMakerHomeCtrl'});
+        $routeProvider.when('/settings', {templateUrl: 'partials/settings.html', controller: 'SettingsCtrl'});
         $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'LoginCtrl'});
         $routeProvider.when('/device', {templateUrl: 'partials/device.html', controller: 'DeviceCtrl'});
         $routeProvider.when('/help', {templateUrl: 'partials/help.html', controller: 'HelpCtrl'});
