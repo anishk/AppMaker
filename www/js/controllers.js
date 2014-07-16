@@ -57,31 +57,22 @@ angular.module('myApp.controllers', []).
             $location.path("/home");
         }])
     .controller('DeviceCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
-        /*
-         alert (window.device);
-         alert (window.device.name);
-         */
-//        var onDeviceReady = function() {
-//            alert ("Device : " + device);
-//            alert ("Device name " + device.name);
-//            alert ("window Device name : " + window.device.name);
-//            alert ("window Device uuid : " + window.device.uuid);
-        $scope.devicename = window.device.name;
-        $scope.deviceuuid = window.device.uuid;
-        $scope.deviceplatform = window.device.platform;
-        $scope.deviceversion = window.device.version;
-        $scope.devicemodel = window.device.model;
-//            $scope.$apply();
-//        };
-
-//        document.addEventListener("deviceready", onDeviceReady, false);
-
+        if(window.device) {
+            $scope.devicename = window.device.name;
+            $scope.deviceuuid = window.device.uuid;
+            $scope.deviceplatform = window.device.platform;
+            $scope.deviceversion = window.device.version;
+            $scope.devicemodel = window.device.model;
+        }else {
+            $scope.devicename = "Kryptos Emulator";
+            $scope.deviceuuid = "N/A";
+            $scope.deviceplatform = "Desktop";
+            $scope.deviceversion = "N/A";
+            $scope.devicemodel = "N/A";
+        }
         $rootScope.showlogin = false;
         MyCampusApp.homeScreenDisplayed = false;
-
     }])
-
-
     .controller('LoginCtrl', ['$scope', '$rootScope', '$http', '$location',
         function ($scope, $rootScope, $http, $location) {
             $rootScope.showlogin = false;
@@ -133,70 +124,6 @@ angular.module('myApp.controllers', []).
                         $.jStorage.deleteKey('ticket');
                     });
                 });
-//            $rootScope.authenticate(username, password, function(data) {
-//                alert ("Susccess called back " + data);
-//            }, function(data) {
-//               alert("Error call back" + data);
-//            });
-                /*MyCampusApp.invokeService($rootScope, $http, "services/authenticate/login", "POST", data,
-                 function(data, status, headers, config) {
-                 //console.log("Success Data : " + data);
-                 //alert ("Success : " + data);
-                 if(data.error) {
-                 apprise(data.error, {'verify':false, 'textYes':"Ok"}, function(r) {
-                 $rootScope.ticket = null;
-                 $rootScope.loggedin = false;
-                 $.jStorage.deleteKey('username');
-                 $.jStorage.deleteKey('password');
-                 $.jStorage.deleteKey('ticket');
-                 });
-                 }else {
-                 var ticket = data.ticket;
-                 $rootScope.ticket = ticket;
-                 $rootScope.loggedin = true;
-                 $.jStorage.set('username', username);
-                 $.jStorage.set('password', password);
-                 $.jStorage.set('ticket', ticket);
-                 $location.path("/home");
-                 }
-                 }, function(data, status, headers, config) {
-                 console.log("Error Data : " + data);
-                 alert ("Error : " + data);
-                 });  */
-
-                /* var url="";
-                 if(window.device) {
-                 url=authUrl;
-                 }else {
-                 url = "/comet/websimulator/json?url=" + authUrl;
-                 data = {method:'POST', body: data};
-                 }
-                 $http.post(url, data).
-                 success(function(data, status, headers, config) {
-                 //console.log("Success Data : " + data);
-                 //alert ("Success : " + data);
-                 if(data.error) {
-                 apprise(data.error, {'verify':false, 'textYes':"Ok"}, function(r) {
-                 $rootScope.ticket = null;
-                 $rootScope.loggedin = false;
-                 $.jStorage.deleteKey('username');
-                 $.jStorage.deleteKey('password');
-                 $.jStorage.deleteKey('ticket');
-                 });
-                 }else {
-                 var ticket = data.ticket;
-                 $rootScope.ticket = ticket;
-                 $rootScope.loggedin = true;
-                 $.jStorage.set('username', username);
-                 $.jStorage.set('password', password);
-                 $.jStorage.set('ticket', ticket);
-                 $location.path("/home");
-                 }
-                 }).
-                 error(function(data, status, headers, config) {
-                 console.log("Error Data : " + data);
-                 alert ("Error : " + data);
-                 });*/
             };
 
         }])
@@ -247,7 +174,6 @@ angular.module('myApp.controllers', []).
     .controller('HomeCtrl', ['$rootScope', '$scope', '$http', '$location', '$window', '$sce', '$route', '$compile',
         function ($rootScope, $scope, $http, $location, $window, $sce, $route, $compile) {
             //alert("Home controller called..");
-            try {
             //alert ("Home Controller called");
             //setTimeout(function () {
 
@@ -274,18 +200,18 @@ angular.module('myApp.controllers', []).
 
                 /** Get the Tenant information **/
                 var tenant = MyCampusApp.config.tenant;
-				//alert ("Tenant before: " + tenant);
+
                 if ($.jStorage.get('tenant')) {
                     tenant = $.jStorage.get('tenant');
                 }
-				//alert ("Tenant after: " + tenant);
+
 
                 /**
                  * Update the Root scope model for Home screen
                  */
                     //alert ("Before fillRootScopeForHome ");
-                MyCampusApp.fillRootScopeForHome($rootScope, $sce, tenant, $window, $location, $route, $http);
-				//alert ("After fillRootScopeForHome");
+                MyCampusApp.fillRootScopeForHome($rootScope, $sce, tenant, $window, $location, $route, $http,  $scope, $compile);
+
                 if (window.device) {
                     var allIcons, allScreens, dock, dockIcons, icon, stage, _i, _len, _results;
                     allIcons = [];
@@ -371,15 +297,15 @@ angular.module('myApp.controllers', []).
                         if ($rootScope.metadata) {
                             $rootScope.updateCheck = function () {
                                 MyCampusApp.checkAndUpdateMetadata(tenant, baseUrl, $http, $rootScope.metadata.version, $route,
-                                    $rootScope, $scope, $sce, logosDirPath);
+                                    $rootScope, $scope, $sce, logosDirPath, $compile);
                             };
                             MyCampusApp.checkAndUpdateMetadata(tenant, baseUrl, $http, $rootScope.metadata.version, $route,
-                                $rootScope, $scope, $sce, logosDirPath);
+                                $rootScope, $scope, $sce, logosDirPath, $compile);
                         } else {
                             $rootScope.updateCheck = function () {
-                                MyCampusApp.checkAndUpdateMetadata(tenant, baseUrl, $http, -1, $route, $rootScope, $scope, $sce, logosDirPath);
+                                MyCampusApp.checkAndUpdateMetadata(tenant, baseUrl, $http, -1, $route, $rootScope, $scope, $sce, logosDirPath, $compile);
                             };
-                            MyCampusApp.checkAndUpdateMetadata(tenant, baseUrl, $http, -1, $route, $rootScope, $scope, $sce, logosDirPath);
+                            MyCampusApp.checkAndUpdateMetadata(tenant, baseUrl, $http, -1, $route, $rootScope, $scope, $sce, logosDirPath, $compile);
                         }
                     };
 
@@ -394,16 +320,11 @@ angular.module('myApp.controllers', []).
                 } else {
                     $http.jsonp(baseUrl + "/metaData/index/" + tenant + "?callback=JSON_CALLBACK").
                         success(function (data) {
-
-                        MyCampusApp.refreshMetdata(data, $rootScope, $scope, $sce, tenant, baseUrl, $route);
+                        MyCampusApp.refreshMetdata(data, $rootScope, $scope, $sce, tenant, baseUrl, "", $route, $compile);
                     })
                 }
             //} , 500);
 
-
-		}catch(e) {
-			alert ("Exception in home controller.." + e);
-		}
         }])
     .controller('AppCtrl', ['$scope', '$routeParams', '$compile', '$http', '$rootScope', '$sce', '$window',
         '$location',
@@ -448,7 +369,18 @@ angular.module('myApp.controllers', []).
                 return pageDef;
             };
             var appDefinition = appDef($scope.appname);
+            var pageDefinition = pageDef(appDefinition, $scope.pageid);
+            if(appDefinition.analytics) {
+                /** Get the Tenant information **/
+                var tenant = MyCampusApp.config.tenant;
 
+                if ($.jStorage.get('tenant')) {
+                    tenant = $.jStorage.get('tenant');
+                }
+                var baseUrl = MyCampusApp.config.serverUrl;
+                MyCampusApp.logPageAccess(tenant, baseUrl, $http, appDefinition.id,
+                    appDefinition.displayname, pageDefinition.pageid);
+            }
             if (window.device && appDefinition.networkrequired) {
                 var networkState = navigator.connection.type;
                 if (networkState == "none" || networkState == "unknown") {
@@ -462,7 +394,7 @@ angular.module('myApp.controllers', []).
             }
             try {
                 $rootScope.appDisplayName = appDefinition.displayname;
-                var pageDefinition = pageDef(appDefinition, $scope.pageid);
+
                 console.log("page Def : " + pageDefinition);
                 window.eval(pageDefinition.pageprocessor);
                 var pageProcessorName = 'pageprocessor' + pageDefinition.pageid;
@@ -473,228 +405,13 @@ angular.module('myApp.controllers', []).
                         $http, $rootScope, $sce, $window, $location);
                 }
             } catch (e) {
+
                 $.unblockUI();
                 apprise("Unknown error occured while processing the request.!", {'verify': false, 'textYes': "Ok"}, function (r) {
                     $rootScope.back();
                 });
             }
-
-            if (true) {
-                return;
-            }
-            /*
-             if($scope.appname == 'Courses') {
-             var content = '<div class="container"><div class="list-group">' +
-             '<a href="#" class="list-group-item">' +
-             '<img style="width:50px;height:50px;"src="img/events.png" class="img-thumbnail"></img' +
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-             '<a href="#" class="list-group-item">'+
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-             '<a href="#" class="list-group-item">'+
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-             '<a href="#" class="list-group-item">'+
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-             '<a href="#" class="list-group-item">'+
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-             '<a href="#" class="list-group-item">'+
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-             '<a href="#" class="list-group-item">'+
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-             '<a href="#" class="list-group-item">'+
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-             '<a href="#" class="list-group-item">'+
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-             '<a href="#" class="list-group-item">'+
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-             '<a href="#" class="list-group-item">'+
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-             '<a href="#" class="list-group-item">'+
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-             '<a href="#" class="list-group-item">'+
-             '<h4 class="list-group-item-heading">List group item heading</h4>'+
-             '<p class="list-group-item-text">content..</p>'+
-             '</a>'+
-
-             '</div></div>';
-
-             var component = $compile($(content))($scope);
-             $('#appContent').append(component);
-             }else if($scope.appname == 'Events') {
-
-             var content = '<div class="container-fluid">'+
-             '<div data-ng-controller="FeedCtrl">'+
-             '<div class="row-fluid">'+
-             '<h4>Feed Reader using AngularJS</h4>'+
-             '<form>'+
-             '<div class="input-prepend span12">'+
-             '<div class="btn-group">'+
-             '<button class="btn btn-info" type="button" tabindex="-1">{{loadButonText}}</button>'+
-             '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" tabindex="-1">'+
-             '<span class="caret"></span>'+
-             '</button>'+
-             '<ul class="dropdown-menu">'+
-             '<li><a ng-click="feedSrc=\'http://rss.cnn.com/rss/cnn_topstories.rss\';loadFeed($event);">CNN</a></li>'+
-             '<li><a ng-click="feedSrc=\'http://news.ycombinator.com/rss\';loadFeed($event)">Hacker News</a></li>'+
-             '<li><a ng-click="feedSrc=\'http://feeds2.feedburner.com/Mashable\';loadFeed($event)">Mashable</a></li>'+
-             '<li><a ng-click="feedSrc=\'http://feeds.huffingtonpost.com/huffingtonpost/raw_feed\';loadFeed($event)">Huffington Post</a></li>'+
-             '<li><a ng-click="feedSrc=\'http://feeds.feedburner.com/TechCrunch\';loadFeed($event)">TechCrunch</a></li>'+
-             '</ul>'+
-             '</div>'+
-             '<input type="text" class="span10" autocomplete="off" placeholder="Enter Feed URL" data-ng-model="feedSrc" />'+
-             '</div>'+
-             '<div class="input-prepend" ng-show="feeds.length > 0">'+
-             '<span c32lass="add-on"><i class="icon-search"></i></span>'+
-             '<input class="span12" type="text" placeholder="Search" data-ng-model="filterText" />'+
-             '</div>'+
-             '</form>'+
-             '</div>'+
-             '<div class="row-fluid">'+
-             '<ul class="list-group">'+
-             '<span class="badge badge-warning" ng-show="feeds.length > 0">{{(feeds | filter:filterText).length}} Items</span>'+
-             '<a><li class="list-group-item" ng-repeat="feed in feeds | filter:filterText">'+
-             '<h5><a href="{{feed.link}}">{{feed.title}}</a></h5>'+
-             '<p class="text-left">{{feed.contentSnippet}}</p>'+
-             '<span class="small">{{feed.publishedDate}}</span>'+
-             '</li></a>'+
-             '</ul>'+
-             '</div>'+
-             '</div>'+
-             '</div>';
-
-             var component = $compile($(content))($scope);
-             $.blockUI();
-             var feed = new google.feeds.Feed("http://rss.cnn.com/rss/cnn_topstories.rss");
-             feed.setNumEntries(-1);
-             feed.setResultFormat(google.feeds.Feed.JSON);
-             feed.load(function(result) {
-             if (!result.error) {
-
-             $scope.feeds=result.feed.entries;
-             var data = '<div class="row-fluid">'+
-             '<ul class="list-group">'+
-             '<li class="list-group-item" ng-repeat="feed in feeds | filter:filterText">'+
-             '<a><h5><a href="{{feed.link}}">{{feed.title}}</a></h5>'+
-             '<p class="text-left">{{feed.contentSnippet}}</p>'+
-             '<span class="small">{{feed.publishedDate}}</span></a>'+
-             '</li>'+
-             '</ul>'+
-             '</div>';
-
-
-
-             setTimeout(function() {
-             var data1 = $compile($(data))($scope);
-             $('#appContent').append(data1);
-             $scope.$apply();
-             $.unblockUI();
-             }, 1000);
-
-             }
-             });
-
-             }else if($scope.appname == 'Directory') {
-             $.blockUI();
-             var template = '<div class="input-prepend" ng-show="feeds.length > 0">'+
-             '<span c32lass="add-on"><i class="icon-search"></i></span>'+
-             '<input class="span12" type="text" placeholder="Search" data-ng-model="filterText" />'+
-             '</div>'+
-             '<div class="row-fluid">'+
-             '<ul class="list-group">'+
-             '<a><li class="list-group-item" ng-repeat="entry in direntries | filter:filterText">'+
-             '<h5><a href="#">{{entry.LN}}, {{entry.FN}}</a></h5>'+
-             '<p class="text-left">{{entry.title}}</p>'+
-             '</li></a>'+
-             '</ul>'+
-             '</div>';
-
-             var url = 'http://www.newriver.edu/mobile/NRCTC_EMLOYEE_DIRECTORY.xml';
-             var proxyurl = "http://localhost:8081/comet/websimulator/xml?url=" + url;
-
-             $http.get(proxyurl, {"responseType" : "xml",
-             "transformResponse" : function(data) {
-             var jsonData = $.xml2json(data);
-             return jsonData;
-             } } ).
-             success(function(data){
-             $scope.direntries = data.NR_DIR;
-             var data1 = $compile($(template))($scope);
-             $('#appContent').append(data1);
-             $scope.$apply();
-             $.unblockUI();
-             });
-
-             }else if($scope.appname == 'Maps') {
-             var mapCanvas = '<div id="MapsMapCanvas" style="width:100%;height:89%;position:absolute;"></div>';
-             $("#appContent").append($(mapCanvas));
-             $("#MapsMapCanvas").gmap({"center": "12.93166,77.62270", "zoom": 15, "disableDefaultUI": false, "callback": function () {
-             var self = this;
-             var i = 0;
-
-             if (pagedef.mapmarkers) {
-             var markers = pagedef.mapmarkers.split("@@");
-             i = 0;
-             $.each(markers, function (key, val) {
-             var loc = val.split(":");
-             setTimeout(function () {
-             self.addMarker({"position": loc[0] + "," + loc[1], "animation": google.maps.Animation.DROP }).click(function () {
-             self.openInfoWindow({ "content": loc[2]}, this);
-             });
-             }, i * 200);
-             i++;
-             });
-             }
-             }});
-             }   */
-
-            //$scope.content=;
-            //alert ("app id : " + $routeParams.appid);
         }])
-    .controller('FeedCtrl', ['$scope', 'FeedService', '$compile', function ($scope, Feed, $compile) {
-        $scope.loadButonText = "Load";
-        $scope.loadFeed = function (e) {
-            //alert ("Load feed called : " + $scope.feedSrc);
-            var feed = new google.feeds.Feed($scope.feedSrc);
-            feed.setNumEntries(-1);
-            feed.setResultFormat(google.feeds.Feed.JSON);
-            feed.load(function (result) {
-                if (!result.error) {
-                }
-                $scope.feeds = result.feed.entries;
-                $scope.$apply();
-            });
-
-            //Feed.parseFeed($scope.feedSrc, $scope);
-            //.then(function(res){
-            //    $scope.loadButonText=angular.element(e.target).text();
-            //    alert ("Res : " + res);
-            //$scope.feeds=res.data.responseData.feed.entries;
-            //});
-        }
-    }])
     .controller('HelpCtrl', ['$scope', '$compile', function ($scope, $compile) {
 
     }])
@@ -709,53 +426,15 @@ angular.module('myApp.controllers', []).
             $rootScope.loading = false;
             $.unblockUI();
         });
-
-        var scrollItems = [];
-
-        for (var i = 1; i <= 100; i++) {
-            scrollItems.push("Item " + i);
-        }
-
-        $scope.scrollItems = scrollItems;
-        $scope.invoice = {payed: true};
-
-        $scope.userAgent = navigator.userAgent;
-        /*$scope.chatUsers = [
-         { name: "Carlos  Flowers", online: true },
-         { name: "Byron Taylor", online: true },
-         { name: "Jana  Terry", online: true },
-         { name: "Darryl  Stone", online: true },
-         { name: "Fannie  Carlson", online: true },
-         { name: "Holly Nguyen", online: true },
-         { name: "Bill  Chavez", online: true },
-         { name: "Veronica  Maxwell", online: true },
-         { name: "Jessica Webster", online: true },
-         { name: "Jackie  Barton", online: true },
-         { name: "Crystal Drake", online: false },
-         { name: "Milton  Dean", online: false },
-         { name: "Joann Johnston", online: false },
-         { name: "Cora  Vaughn", online: false },
-         { name: "Nina  Briggs", online: false },
-         { name: "Casey Turner", online: false },
-         { name: "Jimmie  Wilson", online: false },
-         { name: "Nathaniel Steele", online: false },
-         { name: "Aubrey  Cole", online: false },
-         { name: "Donnie  Summers", online: false },
-         { name: "Kate  Myers", online: false },
-         { name: "Priscilla Hawkins", online: false },
-         { name: "Joe Barker", online: false },
-         { name: "Lee Norman", online: false },
-         { name: "Ebony Rice", online: false }
-         ]*/
-
     })
     .controller('AMakerHomeCtrl', ['$rootScope', '$scope', '$http', '$location', '$window', '$sce', '$route', '$compile',
         function ($rootScope, $scope, $http, $location, $window, $sce, $route, $compile) {
 			//alert ("Appmaker home ctrl called");
+			$('#customstyle').html("");
 			$rootScope.backgroundUrl = "./images/block.png";
 			$rootScope.brandingUrl = "./images/Banner-03.png";
 
-			$rootScope.appDisplayName = "KRYPTOS App Machine";
+			$rootScope.appDisplayName = "KRYPTOS App Viewer";
 			var url = "https://kryptos.kryptosmobile.com";
 			$scope.loadApps = function(token) {
 				var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading App..!!</h3></div>';
@@ -871,7 +550,7 @@ $rootScope.$on("onDownloadComplete", function(event, data) {
 				$.jStorage.deleteKey(tenant + '-metadata');
 				var processLogosDir = function (logosDir) {
 					var logosDirPath = logosDir.toNativeURL();
-					MyCampusApp.checkAndUpdateMetadata(tenant, baseUrl, $http, -1, $route, $rootScope, $scope, $sce, logosDirPath, true);
+					MyCampusApp.checkAndUpdateMetadata(tenant, baseUrl, $http, -1, $route, $rootScope, $scope, $sce, logosDirPath, $compile, true);
 					$rootScope.$apply(function () {
 						setTimeout(function () {
 							//$location.path("/home");
@@ -897,6 +576,7 @@ $rootScope.$on("onDownloadComplete", function(event, data) {
 	}])
 	.controller('ApplicationsCtrl', ['$rootScope', '$scope', '$http', '$location', '$window', '$sce', '$route', '$compile','$routeParams',
         function ($rootScope, $scope, $http, $location, $window, $sce, $route, $compile, $routeParams) {
+			$rootScope.showlogin = false;
 			$rootScope.back = function() {
 	            $window.history.back();
 	        };
@@ -919,4 +599,3 @@ $rootScope.$on("onDownloadComplete", function(event, data) {
 			$scope.loadApplications($.jStorage.get('ktoken'));
 
 		}]);
-

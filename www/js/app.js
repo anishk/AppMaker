@@ -1,12 +1,4 @@
 'use strict';
-/*var app = angular.module('MobileAngularUiExamples', [
-    "ngRoute",
-    "mobile-angular-ui",
-    "mobile-angular-ui.touch",
-    "mobile-angular-ui.scrollable"
-]);*/
-
-
 // Declare app level module which depends on filters, and services
 angular.module('myApp', [
         'ngRoute',
@@ -24,8 +16,7 @@ angular.module('myApp', [
         $routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl1'});
         $routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});
         $routeProvider.when('/home', {templateUrl: 'partials/home.html', controller: 'HomeCtrl'});
-        $routeProvider.when('/amakerhome', {templateUrl: 'partials/amakerhome.html', controller: 'AMakerHomeCtrl'});
-        $routeProvider.when('/settings', {templateUrl: 'partials/settings.html', controller: 'SettingsCtrl'});
+        $routeProvider.when('/amakerhome', {templateUrl: 'partials/amakerhome.html', controller: 'AMakerHomeCtrl'});        $routeProvider.when('/settings', {templateUrl: 'partials/settings.html', controller: 'SettingsCtrl'});
         $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'LoginCtrl'});
         $routeProvider.when('/device', {templateUrl: 'partials/device.html', controller: 'DeviceCtrl'});
         $routeProvider.when('/help', {templateUrl: 'partials/help.html', controller: 'HelpCtrl'});
@@ -102,7 +93,7 @@ var MyCampusApp = {
         }
         return retval;
     },
-    fillRootScopeForHome : function($rootScope, $sce, tenant, $window, $location, $route, $http) {
+    fillRootScopeForHome : function($rootScope, $sce, tenant, $window, $location, $route, $http, $scope, $compile) {
         MyCampusApp.homeScreenDisplayed=true;
         MyCampusApp.rootScope = $rootScope;
         $.KNMonitor.initialize($rootScope);
@@ -110,7 +101,6 @@ var MyCampusApp = {
         //If Metadata doesn't exist in the local storage. Then this app is launched for the first time.
         //Lets pull the default metadata file.
         if(!storedMetadata) {
-			//alert ("No Stored metadata");
             $http.get("default-metadata.json").success(function(data){
                 var tenantid = data.tenantid
                 $.jStorage.set(tenantid + '-metadata', data);
@@ -182,7 +172,14 @@ var MyCampusApp = {
             $rootScope.metadata = storedMetadata;
             $rootScope.middlewareServerUrl = storedMetadata.middlewareServerUrl;
             $rootScope.customStyle = $sce.trustAs($sce.CSS, storedMetadata.customStyle);
+
             $('#customstyle').html(storedMetadata.customStyle);
+            try {
+                var data1 = $compile($(storedMetadata.homeScreenTemplate))($scope);
+                $("#homecontent").html(data1);
+            }catch(exce) {
+                //Ignore..
+            }
             window.eval(storedMetadata.authFunction);
         }
 
@@ -204,6 +201,10 @@ var MyCampusApp = {
                     $.jStorage.deleteKey('username');
                     $.jStorage.deleteKey('password');
                     $.jStorage.deleteKey('ticket');
+
+                    if( angular.isFunction( $rootScope["logoutcb"] ) ) {
+                        $rootScope["logoutcb"]();
+                    }
                     $route.reload();
                 }
             };
@@ -239,16 +240,20 @@ var MyCampusApp = {
         $rootScope.showlogin=true;
         if(window.device) {
             if($rootScope.metadata) {
-				if(!$rootScope.brandingUrl) {
-            	    $rootScope.brandingUrl = $rootScope.metadata.brandingurl + "?q=" + Math.random();
-				}
-				if(!$rootScope.backgroundUrl) {
-            	    $rootScope.backgroundUrl = $rootScope.metadata.backgroundurl + "?q=" + Math.random();
-				}
+                if(!$rootScope.brandingUrl) {
+                    $rootScope.brandingUrl = $rootScope.metadata.brandingurl + "?q=" + Math.random();
+                }
+                if(!$rootScope.backgroundUrl) {
+                    $rootScope.backgroundUrl = $rootScope.metadata.backgroundurl + "?q=" + Math.random();
+                }
             }
         }else {
-            $rootScope.brandingUrl = "/metaData/branding/q=" + Math.random();
-            $rootScope.backgroundUrl = "/metaData/background/q=" + Math.random();
+            if(!$rootScope.brandingUrl) {
+                $rootScope.brandingUrl = "/metaData/branding/q=" + Math.random();
+            }
+            if(!$rootScope.backgroundUrl) {
+                $rootScope.backgroundUrl = "/metaData/background/q=" + Math.random();
+            }
         }
 
         $rootScope.leftswipe = function() {
@@ -301,12 +306,6 @@ var MyCampusApp = {
     resumeHandler: function(){
         try {
             $.unblockUI();
-            if(MyCampusApp.homeScreenDisplayed) {
-                //MyCampusApp.homeRoute.reload();
-            }
-//
-//        var rootScope = angular.element('#htmlRoot').scope();
-//        rootScope.updateCheck();
 			if(MyCampusApp.rootScope) {
 				MyCampusApp.rootScope.updateCheck();
 			}
@@ -359,13 +358,13 @@ var MyCampusApp = {
         //fileSystem.root.getDirectory("Android/data/org.campuseai." + tenant + ".appLogos",{create:true},gotDir,onError);
     },
 
-    checkAndUpdateMetadata : function(tenant, url, $http, currentVersion,  $route, $rootScope, $scope, $sce, logosDirPath, silent) {
+    checkAndUpdateMetadata : function(tenant, url, $http, currentVersion,  $route, $rootScope, $scope, $sce, logosDirPath, $compile, silent) {
         $http.post(url + "/metagate/updatecheck/" + tenant + "?callback=JSON_CALLBACK", {device: window.device}).
             success(function(data) {
                 if(data.version != currentVersion) {
                     var onConfirm = function(buttonIndex) {
                         if(buttonIndex == 1) {
-                            MyCampusApp.updateMetadata(tenant, url, $http, data, $route, $rootScope, $scope, $sce, logosDirPath);
+                            MyCampusApp.updateMetadata(tenant, url, $http, data, $route, $rootScope, $scope, $sce, logosDirPath, $compile);
                         }
                         $rootScope.umalert = false;
                     };
@@ -384,7 +383,7 @@ var MyCampusApp = {
 							apprise("App Updates available. Update ? ", {'verify':true, 'textYes':"Yes", 'textNo':"No"}, function(r) {
 								if(r) {
 									//navigator.app.exitApp();
-									MyCampusApp.updateMetadata(tenant, url, $http, data, $route, $rootScope, $scope, $sce, logosDirPath);
+									MyCampusApp.updateMetadata(tenant, url, $http, data, $route, $rootScope, $scope, $sce, logosDirPath, $compile);
 								} else MyCampusApp.modalDialogDisplayed = false;
 							});
 						}
@@ -395,19 +394,19 @@ var MyCampusApp = {
             });
     },
 
-    updateMetadata : function(tenant, url, $http, data, $route, $rootScope, $scope, $sce, logosDirPath) {
-        $http.post(url + "/metagate/metadata/" + tenant + "?callback=JSON_CALLBACK", {source: data.source, id : data.id}).
+    updateMetadata : function(tenant, url, $http, data, $route, $rootScope, $scope, $sce, logosDirPath, $compile) {
+        $http.post(url + "/metagate/metadata/" + tenant + "?callback=JSON_CALLBACK", {source: data.source, id : data.id, device: window.device}).
             success(function(data) {
                 if(window.device && data.pushconfig) {
                     MyCampusApp.activatePushNotification(tenant, data.pushconfig);
                 }
-                MyCampusApp.refreshMetdata(data, $rootScope, $scope, $sce, tenant, url, logosDirPath, $route);
+                MyCampusApp.refreshMetdata(data, $rootScope, $scope, $sce, tenant, url, logosDirPath, $route, $compile);
                 //$.jStorage.set(tenant + '-metadata', data);
-                //$route.reload();
+               // $route.reload();
             });
     },
 
-    refreshMetdata : function(data, $rootScope, $scope, $sce, tenant, baseUrl, logosDirPath, $route) {
+    refreshMetdata : function(data, $rootScope, $scope, $sce, tenant, baseUrl, logosDirPath, $route, $compile) {
 
         //window.localStorage.setItem('metadata', data);
         var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Initializing</h3></div>';
@@ -446,6 +445,13 @@ var MyCampusApp = {
             }
         });
         $rootScope.customStyle = $sce.trustAs($sce.CSS, data.customStyle);
+        try {
+            var data1 = $compile($(data.homeScreenTemplate))($scope);
+            $("#homecontent").html(data1);
+        }catch(exce) {
+            //Ignore..
+        }
+
         $('#customstyle').html(data.customStyle);
 
 
@@ -638,7 +644,6 @@ var MyCampusApp = {
                     ft = new FileTransfer();
                     ft.download(url, dlPath, function(){
                         downcounter--;
-                        //alert ("Download complete for app : " + val.id);
                         /*message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3>' + val.id + ' icon Downloaded.!</h3></div>';
                          $.blockUI({message : message});
                          setTimeout(function() {
@@ -799,6 +804,35 @@ var MyCampusApp = {
 
         }
 
+    },
+
+    logPageAccess : function(tenant, url, $http, appid, appname, pageid) {
+        try {
+            var mydevice;
+            if(window.device) {
+                mydevice = window.device;
+            }else {
+                mydevice = {
+                    model : "NA",
+                    cordova : "NA",
+                    platform : "NA",
+                    uuid : "Emulator",
+                    version : "NA",
+                    name : "NA",
+                }
+            }
+            $http.post(url + "/analytics/logpageaccess/" + tenant + "?callback=JSON_CALLBACK", {
+                activity : {
+                    "appid" : appid,
+                    "appname"  : appname,
+                    "pageid" : pageid
+                }, device: mydevice}).
+                success(function(data) {
+                    //Ignore
+                });
+        }catch(e) {
+            //Ignore
+        }
     }
 
 };
