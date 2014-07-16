@@ -762,10 +762,13 @@ angular.module('myApp.controllers', []).
 				$.blockUI({message : message});
 
 				$http.get(url + "/api/mobapp/listMyApps?token=" + token).
-					success(function (d1) {
+					success(function (dt) {
 						//alert ("List Apps data : " + d1);
-						$rootScope.tenants = d1;
+						$rootScope.tenants = dt;
 						$.unblockUI();
+						if(dt.length == 1) {
+							$location.search('appid',dt[0].appid).path('/launch/' + dt[0].tenantid);
+						}
 					}).error (function(edata, status) {
 						$.unblockUI();
 						if(status == 403) {
@@ -783,7 +786,8 @@ angular.module('myApp.controllers', []).
 									$scope.loadApps(data.token);
 								}).error(function(data){
 									$.unblockUI();
-									alert ("Error in authenticate : " + data);
+									apprise(data, {'verify': false, 'textYes': "Ok"}, function (r) {
+                					});
 								}
 							);
 						}
@@ -829,48 +833,11 @@ angular.module('myApp.controllers', []).
 						$scope.loadApps(data.token);
 					}).error(function(data){
 						$.unblockUI();
-						alert ("Error in authenticate : " + data);
+						apprise(data, {'verify': false, 'textYes': "Ok"}, function (r) {
+						});
                 	}
                 );
 			}
-			/*$rootScope.tenants =
-			[
-			  {
-			    "tenantname": "Bard College at Simons Rock",
-			    "tenantid": "BCSR",
-			    "appname": "mySimonsRock"
-			  },
-			  {
-			    "tenantname": "Campus EAI Consortium",
-			    "tenantid": "CEAI",
-			    "appname": "my Campus "
-			  },
-			  {
-			    "tenantname": "Hampton University",
-			    "tenantid": "HAMPTON",
-			    "appname": "myHamptonu"
-			  },
-			  {
-			    "tenantname": "Nevada State College",
-			    "tenantid": "NSC",
-			    "appname": "NSC Mobile"
-			  },
-			  {
-			    "tenantname": "Saurabh Mishra",
-			    "tenantid": "QA",
-			    "appname": "QA Test"
-			  },
-			  {
-			    "tenantname": "Toccoa Falls College",
-			    "tenantid": "TFC",
-			    "appname": "myTFC"
-			  },
-			  {
-			    "tenantname": "York College of Pennsylvania",
-			    "tenantid": "YCP",
-			    "appname": "YCP Mobile"
-			  }
-			];*/
     }])
     .controller('LaunchCtrl', ['$rootScope', '$scope', '$http', '$location', '$window', '$sce', '$route', '$compile','$routeParams',
         function ($rootScope, $scope, $http, $location, $window, $sce, $route, $compile, $routeParams) {
