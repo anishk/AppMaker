@@ -24,7 +24,11 @@
     color: #ffffff;
 }
 </style>
-
+<div content-for="navbarAction" >
+	<div ng-click='klogout();' class="btn btn-navbar" ng-show="klogin">
+  		<i class="fa fa-power-off fa-2x"></i>
+    </div>
+</div>
 <div class="scrollable">
     <div class="scrollable-content">
 		<div class="list-group">

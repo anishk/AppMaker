@@ -521,6 +521,15 @@ angular.module('myApp.controllers', []).
     .controller('LaunchCtrl', ['$rootScope', '$scope', '$http', '$location', '$window', '$sce', '$route', '$compile','$routeParams',
         function ($rootScope, $scope, $http, $location, $window, $sce, $route, $compile, $routeParams) {
 
+			$scope.klogout = function() {
+				$rootScope.klogin = false;
+				$.jStorage.deleteKey('kusername');
+				$.jStorage.deleteKey('kpassword');
+				$.jStorage.deleteKey('ktoken');
+				$rootScope.$apply(function () {
+						$location.path("/amakerhome");
+				});
+			};
 			var tenant = $routeParams.tenant;
 			var appid = $routeParams.appid;
 			$rootScope.ktenant = tenant;
