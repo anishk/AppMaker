@@ -434,7 +434,7 @@ angular.module('myApp.controllers', []).
 			$rootScope.backgroundUrl = "./images/block.png";
 			$rootScope.brandingUrl = "./images/Banner-03.png";
 
-			$rootScope.appDisplayName = "KRYPTOS App Viewer";
+			$rootScope.appDisplayName = "KRYPTOS App Maker (QA)";
 			var url = "https://kryptosqa.kryptosmobile.com";
 			$scope.loadApps = function(token) {
 				var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading App..!!</h3></div>';
