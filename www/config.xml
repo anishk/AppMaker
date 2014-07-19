@@ -3,16 +3,16 @@
 <!-- config.xml reference: https://build.phonegap.com/docs/config-xml -->
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "com.kryptosmobile.AppMakerQA"
+        id        = "com.kryptosmobile.AppMaker"
         version   = "1.0.0">
 
-    <name>AppMaker QA</name>
+    <name>AppMaker</name>
 
     <description>
-        Kryptos App Maker for QA. This app talks to https://kryptosqa.kryptosmobikle.com
+        Kryptos App Maker. This app talks to https://kryptos.kryptosmobikle.com
     </description>
 
-    <author href="http://phonegap.com" email="support@kryptosmobile.com">
+    <author href="http://kryptosmobile.com.com" email="support@kryptosmobile.com">
         Kryptos Mobile Team
     </author>
 

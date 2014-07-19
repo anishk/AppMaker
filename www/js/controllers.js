@@ -435,7 +435,7 @@ angular.module('myApp.controllers', []).
 			$rootScope.brandingUrl = "./images/Banner-03.png";
 
 			$rootScope.appDisplayName = "KRYPTOS App Maker (QA)";
-			var url = "https://kryptosqa.kryptosmobile.com";
+			var url = "https://kryptos.kryptosmobile.com";
 			$scope.loadApps = function(token) {
 				var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading App..!!</h3></div>';
 				$.blockUI({message : message});
@@ -547,7 +547,7 @@ $rootScope.$on("onDownloadComplete", function(event, data) {
 });
 			MyCampusApp.config.tenant = $routeParams.tenant;
 
-			MyCampusApp.config.serverUrl = "https://kryptosqa.kryptosmobile.com";
+			MyCampusApp.config.serverUrl = "https://kryptos.kryptosmobile.com";
 			$rootScope.backgroundUrl = MyCampusApp.config.serverUrl + "/metaData/background/" + tenant;
 			$rootScope.brandingUrl = MyCampusApp.config.serverUrl + "/metaData/branding/" + tenant;
 
@@ -591,7 +591,7 @@ $rootScope.$on("onDownloadComplete", function(event, data) {
 	        };
 			$rootScope.ktenant;
 			$rootScope.kappid;
-			var url = "https://kryptosqa.kryptosmobile.com";
+			var url = "https://kryptos.kryptosmobile.com";
 			$scope.loadApplications = function(token) {
 				var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading App..!!</h3></div>';
 				$.blockUI({message : message});
