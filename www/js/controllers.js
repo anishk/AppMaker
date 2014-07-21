@@ -433,11 +433,20 @@ angular.module('myApp.controllers', []).
 			$('#customstyle').html("");
 			$rootScope.backgroundUrl = "./images/block.png";
 			$rootScope.brandingUrl = "./images/Banner-03.png";
+                    $rootScope.ticket = null;
+                    $rootScope.loggedin = false;
+                    $.jStorage.deleteKey('username');
+                    $.jStorage.deleteKey('password');
+                    $.jStorage.deleteKey('ticket');
 
-			$rootScope.appDisplayName = "KRYPTOS App Maker (QA)";
+                    if( angular.isFunction( $rootScope["logoutcb"] ) ) {
+                        $rootScope["logoutcb"]();
+                    }
+
+			$rootScope.appDisplayName = "KRYPTOS App Maker";
 			var url = "https://kryptos.kryptosmobile.com";
 			$scope.loadApps = function(token) {
-				var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading App..!!</h3></div>';
+				var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading ..!!</h3></div>';
 				$.blockUI({message : message});
 
 				$http.get(url + "/api/mobapp/listMyApps?token=" + token).
