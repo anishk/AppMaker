@@ -443,7 +443,7 @@ angular.module('myApp.controllers', []).
                         $rootScope["logoutcb"]();
                     }
 
-			$rootScope.appDisplayName = "KRYPTOS App Maker";
+			$rootScope.appDisplayName = "KRYPTOS App Konnect";
 			var url = "https://kryptos.kryptosmobile.com";
 			$scope.loadApps = function(token) {
 				var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading ..!!</h3></div>';
