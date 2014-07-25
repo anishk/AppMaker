@@ -316,12 +316,11 @@ var MyCampusApp = {
     resumeHandler: function(){
         try {
             $.unblockUI();
-            alert ("Root scope : " + MyCampusApp.rootScope);
 			if(MyCampusApp.rootScope) {
 				MyCampusApp.rootScope.updateCheck();
 			}
         }catch(e) {
-            alert("Exception in Resume handler : " + e);
+            //alert("Exception in Resume handler : " + e);
         }
     },
 
@@ -599,7 +598,7 @@ var MyCampusApp = {
             $.unblockUI();
             console.log("ERROR");
             console.log(JSON.stringify(e));
-            alert ("Error inside onError : " + JSON.stringify(e));
+            //alert ("Error inside onError : " + JSON.stringify(e));
 
         };
 
