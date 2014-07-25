@@ -9,7 +9,7 @@
     <name>AppMaker</name>
 
     <description>
-        Kryptos App Maker. This app talks to https://kryptos.kryptosmobikle.com
+        Kryptos App Maker. This app talks to https://kryptos.kryptosmobile.com
     </description>
 
     <author href="http://kryptosmobile.com.com" email="support@kryptosmobile.com">
@@ -99,6 +99,7 @@
     <gap:plugin name="org.apache.cordova.splashscreen"/>
     <gap:plugin name="org.apache.cordova.vibration"/>
     <gap:plugin name="com.phonegap.plugin.statusbar" />
+    <gap:plugin name="de.appplant.cordova.plugin.email-composer"/>    
     <gap:config-file platform="ios" parent="UIStatusBarHidden" overwrite="true">
             <true/>
 	</gap:config-file>
