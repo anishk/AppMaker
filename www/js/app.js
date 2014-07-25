@@ -68,7 +68,8 @@ var MyCampusApp = {
 
     init : function(){
         MyCampusApp.initMode = true;
-        document.addEventListener('deviceready', MyCampusApp.deviceReadyHandler, false);
+        //document.addEventListener('deviceready', MyCampusApp.deviceReadyHandler, false);
+        MyCampusApp.deviceReadyHandler();
 
     },
 
