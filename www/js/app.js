@@ -29,6 +29,7 @@ angular.module('myApp', [
         $routeProvider.when('/launch/:tenant', {templateUrl: 'partials/partial1.html', controller: 'LaunchCtrl'});
         $routeProvider.when('/applications', {templateUrl: 'partials/applications.html', controller: 'ApplicationsCtrl'});
         $routeProvider.otherwise({redirectTo: '/amakerhome'});
+        //$routeProvider.otherwise({redirectTo: '/home'});
         $httpProvider.defaults.timeout = 5000;
     }])
     .service('analytics', [
@@ -38,6 +39,13 @@ angular.module('myApp', [
         }
     }
 ]);
+
+var onDeviceReady = function() {
+    angular.bootstrap( document, ['myApp']);
+}
+
+document.addEventListener('deviceready',onDeviceReady, false);
+
 
 var MyCampusApp = {
     config : {
@@ -396,6 +404,7 @@ var MyCampusApp = {
     },
 
     updateMetadata : function(tenant, url, $http, data, $route, $rootScope, $scope, $sce, logosDirPath, $compile) {
+        $.blockUI();
         $http.post(url + "/metagate/metadata/" + tenant + "?callback=JSON_CALLBACK", {source: data.source, id : data.id, device: window.device}).
             success(function(data) {
                 if(window.device && data.pushconfig) {
@@ -404,6 +413,9 @@ var MyCampusApp = {
                 MyCampusApp.refreshMetdata(data, $rootScope, $scope, $sce, tenant, url, logosDirPath, $route, $compile);
                 //$.jStorage.set(tenant + '-metadata', data);
                // $route.reload();
+            }).
+            error(function(date) {
+                $.unblockUI();
             });
     },
 
@@ -669,7 +681,7 @@ var MyCampusApp = {
                                 $.unblockUI();
                             },2000);
 						}catch(exce) {
-							alert ("Exception .." + exce);
+							//alert ("Exception .." + exce);
 						}
 
                         } else {

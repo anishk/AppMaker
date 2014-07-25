@@ -176,7 +176,16 @@ angular.module('myApp.controllers', []).
             //alert("Home controller called..");
             //alert ("Home Controller called");
             //setTimeout(function () {
-
+            if(!$rootScope.homeDownloadCompleteAdded) {
+                $rootScope.$on("onDownloadComplete", function(event, data) {
+                    $.unblockUI();
+                    $route.reload();
+                    $rootScope.$apply(function () {
+                        $location.path("/home");
+                    });
+                });
+                $rootScope.homeDownloadCompleteAdded = true;
+            }
                 MyCampusApp.homeRoute = $route;
                 if (window.device) {
                     if ($.jStorage.get('username')) {
@@ -546,14 +555,15 @@ angular.module('myApp.controllers', []).
 			//alert ("Launch control called with : " + $routeParams.tenant);
 			try {
 
-
-$rootScope.$on("onDownloadComplete", function(event, data) {
-	//alert ("Broadcast received..");
-	$.unblockUI();
-	$rootScope.$apply(function () {
-		$location.path("/home");
-	});
-});
+                if(!$rootScope.homeDownloadCompleteAdded) {
+                    $rootScope.$on("onDownloadComplete", function(event, data) {
+                        $.unblockUI();
+                        $rootScope.$apply(function () {
+                            $location.path("/home");
+                        });
+                    });
+                    $rootScope.homeDownloadCompleteAdded = true;
+                }
 			MyCampusApp.config.tenant = $routeParams.tenant;
 
 			MyCampusApp.config.serverUrl = "https://kryptos.kryptosmobile.com";
