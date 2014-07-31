@@ -98,6 +98,7 @@ angular.module('myApp.controllers', []).
                             $.jStorage.deleteKey('username');
                             $.jStorage.deleteKey('password');
                             $.jStorage.deleteKey('ticket');
+                            $.jStorage.deleteKey('userroles');
                         });
                     } else {
                         var ticket = data.ticket;
@@ -106,6 +107,7 @@ angular.module('myApp.controllers', []).
                         $.jStorage.set('username', username);
                         $.jStorage.set('password', password);
                         $.jStorage.set('ticket', ticket);
+                        $.jStorage.set('userroles', data.roles);
                         if ($rootScope.loggedin == true) {
                         } else {
                             $rootScope.loggedin = true;
@@ -122,6 +124,7 @@ angular.module('myApp.controllers', []).
                         $.jStorage.deleteKey('username');
                         $.jStorage.deleteKey('password');
                         $.jStorage.deleteKey('ticket');
+                        $.jStorage.deleteKey('userroles');
                     });
                 });
             };
@@ -190,6 +193,7 @@ angular.module('myApp.controllers', []).
                 if (window.device) {
                     if ($.jStorage.get('username')) {
                         $rootScope.loggedin = true;
+                        $rootScope.userroles = $.jStorage.get('userroles');
                     } else {
                         $rootScope.loggedin = false;
                     }
@@ -333,7 +337,59 @@ angular.module('myApp.controllers', []).
                     })
                 }
             //} , 500);
-
+            //Anonymous authentication..
+            if(!$rootScope.frameworkSilentAuth) {
+                $rootScope.frameworkSilentAuth = true;
+                if ($rootScope.loggedin && window.device) {
+                    try {
+                        var username = $.jStorage.get('username');
+                        var password = $.jStorage.get('password');
+                        window['authFunction'](username, password, $http, $rootScope, function (data) {
+                            if (data.error) {
+                                var handler = function () {
+                                    $rootScope.ticket = null;
+                                    $rootScope.loggedin = false;
+                                    $rootScope.userroles = null;
+                                    $.jStorage.deleteKey('username');
+                                    $.jStorage.deleteKey('password');
+                                    $.jStorage.deleteKey('ticket');
+                                    $.jStorage.deleteKey('userroles');
+                                };
+                                //navigator.notification.alert(data.error, handler, 'Authentication', 'Ok');
+                                handler();
+                            } else {
+                                var ticket = data.ticket;
+                                $rootScope.ticket = ticket;
+                                $rootScope.userroles = data.roles;
+                                $.jStorage.set('username', username);
+                                $.jStorage.set('password', password);
+                                $.jStorage.set('ticket', ticket);
+                                $.jStorage.set('userroles', data.roles);
+                                if ($rootScope.loggedin == true) {
+                                } else {
+                                    $rootScope.loggedin = true;
+                                    $location.path("/home");
+                                }
+                            }
+                        }, function (data) {
+                            //alert("Error call back" + data);
+                            var handler = function () {
+                                $rootScope.ticket = null;
+                                $rootScope.loggedin = false;
+                                $rootScope.userroles = null;
+                                $.jStorage.deleteKey('username');
+                                $.jStorage.deleteKey('password');
+                                $.jStorage.deleteKey('ticket');
+                                $.jStorage.deleteKey('userroles');
+                            };
+                            //handler();
+                            //navigator.notification.alert("Error occured while processing this request.", handler, 'Authentication', 'Ok');
+                        });
+                    }catch(e) {
+                        //ignore the exception as its silent authentication
+                    }
+                }
+            }
         }])
     .controller('AppCtrl', ['$scope', '$routeParams', '$compile', '$http', '$rootScope', '$sce', '$window',
         '$location',
@@ -447,6 +503,7 @@ angular.module('myApp.controllers', []).
                     $.jStorage.deleteKey('username');
                     $.jStorage.deleteKey('password');
                     $.jStorage.deleteKey('ticket');
+                    $.jStorage.deleteKey('userroles');
 
                     if( angular.isFunction( $rootScope["logoutcb"] ) ) {
                         $rootScope["logoutcb"]();
@@ -558,7 +615,6 @@ angular.module('myApp.controllers', []).
                 if(!$rootScope.homeDownloadCompleteAdded) {
                     $rootScope.$on("onDownloadComplete", function(event, data) {
                         $.unblockUI();
-                        $route.reload();
                         $rootScope.$apply(function () {
                             $location.path("/home");
                         });
