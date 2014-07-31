@@ -573,6 +573,14 @@ angular.module('myApp.controllers', []).
                 }
                 var username = $("#loginUsername").val();
                 var password = $("#loginPassword").val();
+                var networkState = navigator.connection.type;
+                if (networkState == "none" || networkState == "unknown") {
+					var errorCB = function() {
+					};
+					navigator.notification.alert("Oops! You are not connected to Internet. Please check your settings and try again",
+					    errorCB, 'No Network', 'Ok');
+					return;
+				}
 				var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Authenticating</h3></div>';
 				$.blockUI({message : message});
 
@@ -587,8 +595,10 @@ angular.module('myApp.controllers', []).
 						$scope.loadApps(data.token);
 					}).error(function(data){
 						$.unblockUI();
-						apprise(data, {'verify': false, 'textYes': "Ok"}, function (r) {
-						});
+						var errorCB = function() {
+						};
+						navigator.notification.alert(data,
+                        	errorCB, 'Authentication', 'Ok');
                 	}
                 );
 			}
@@ -628,6 +638,16 @@ angular.module('myApp.controllers', []).
 			$rootScope.brandingUrl = MyCampusApp.config.serverUrl + "/metaData/branding/" + tenant;
 
 			$scope.launchApp = function() {
+
+                var networkState = navigator.connection.type;
+                if (networkState == "none" || networkState == "unknown") {
+					var errorCB = function() {
+					};
+					navigator.notification.alert("Oops! You are not connected to Internet. Please check your settings and try again",
+					    errorCB, 'No Network', 'Ok');
+					return;
+				}
+
 			var message = '<div style="margin: 2px; vertical-align: middle; display: inline-block"><i class="icon-cog icon-spin icon-4x"></i><h3 style="color:white;">Loading the App..</h3></div>';
 			$.blockUI({message : message});
 
